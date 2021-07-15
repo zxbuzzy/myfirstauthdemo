@@ -1,45 +1,65 @@
 <html>
-<head>
+  <head>
     <title>Личный кабинет</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"
-    <meta charset='utf-8'/>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+      <meta
+      charset="utf-8"
+    />
 
     <style type="text/css">
-        input {
-            display: block;
-            font-size: 18px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-        }
+      input {
+        display: block;
+        font-size: 18px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+      }
 
-        form {
-            width: 90%;
-            min-width: 250px;
-            max-width: 350px;
-        }
+      form {
+        width: 90%;
+        min-width: 250px;
+        max-width: 350px;
+      }
 
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: ghostwhite;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: ghostwhite;
+      }
     </style>
 
-</head>
-<body>
-<form method="POST" action="/login">
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="submit" value="Войти">
-</form>
-</body>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        let btn = document.querySelector("input[type=submit]");
+        btn.addEventListener("click", async function (e) {
+          e.preventDefault();
+          let username = document.querySelector('input[name=username]').value;
+          let password = document.querySelector('input[name=password]').value;
+          let response = await fetch("/login", {
+              method: "POST",
+              body: new FormData(document.querySelector('form'))
+          })
+          let response_text = await response.text();
+          console.log(response_text);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <form method="POST" action="/login">
+      <input type="text" name="username" />
+      <input type="password" name="password" />
+      <input type="submit" value="Войти" />
+    </form>
+  </body>
 </html>
