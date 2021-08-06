@@ -1,9 +1,10 @@
 import hashlib
 import hmac
+import json
 import base64
 
 from typing import Optional
-from fastapi import FastAPI, Form, Cookie
+from fastapi import FastAPI, Form, Cookie, Body
 from fastapi.responses import Response
 
 # Создание экземпляра приложения
@@ -74,15 +75,23 @@ def index_page(username: Optional[str] = Cookie(default=None)):
 
 
 @app.post('/login')
-def process_login_page(username: str = Form(...), password: str = Form(...)):
+def process_login_page(data: dict = Body(...)):
+    username = data["username"]
+    password = data["password"]
+    print("username is", username)
     user = users.get(username)
-    print(user, password)
     if not user or not verify_password(username, password):
-        return Response("Я вас не знаю", media_type='text/html')
+        return Response(
+            json.dumps({
+                "success": False,
+                "message": "Я вас не знаю!"
+            }), media_type='application/json')
     
     response = Response(
-        f"Привет, {user['name']}!<br />Баланс: {user['balance']}",
-        media_type='text/html')
+        json.dumps({
+            "success": True,
+            "message": f"Привет, {user['name']}!<br />Баланс: {user['balance']}" 
+        }), media_type='application/json')
     username_signed = base64.b64encode(username.encode()).decode() + "." + sign_data(username)
     response.set_cookie(key='username', value=username_signed)
     

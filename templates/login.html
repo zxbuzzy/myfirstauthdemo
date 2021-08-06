@@ -4,9 +4,7 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1"
-      <meta
-      charset="utf-8"
-    />
+      charset="utf-8"/>
 
     <style type="text/css">
       input {
@@ -47,10 +45,16 @@
           let password = document.querySelector('input[name=password]').value;
           let response = await fetch("/login", {
               method: "POST",
-              body: new FormData(document.querySelector('form'))
+              headers: {"Content-Type": "application/json"},  
+              body: `{"username": "${username}", "password": "${password}"}`
           })
-          let response_text = await response.text();
-          console.log(response_text);
+          let response_json = await response.json();
+          if(response_json.success){
+            let body = document.querySelector('body');
+            body.style.display = 'block';
+            body.innerHTML = response_json.message;
+            body.style.backgroundColor = 'AliceBlue';
+          }
         });
       });
     </script>
